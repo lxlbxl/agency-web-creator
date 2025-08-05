@@ -62,17 +62,47 @@ const BackendConfig = () => {
     }, 1000);
   };
 
-  const handleTestConnection = () => {
+  const handleTestConnection = async () => {
+    if (!apiKey) {
+      toast({
+        title: "API Key Required",
+        description: "Please enter your OpenRouter API key before testing the connection.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate testing connection
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Connection Successful",
-        description: "Successfully connected to the OpenRouter API.",
+    try {
+      // Test the API key with a simple request to OpenRouter
+      const response = await fetch("https://openrouter.ai/api/v1/auth/key", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        }
       });
-    }, 1500);
+
+      if (response.ok) {
+        toast({
+          title: "Connection Successful",
+          description: "Successfully connected to the OpenRouter API.",
+        });
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API request failed with status ${response.status}`);
+      }
+    } catch (error: any) {
+      console.error("Connection test failed:", error);
+      toast({
+        title: "Connection Failed",
+        description: error.message || "Failed to connect to the OpenRouter API. Please check your API key.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
