@@ -1,28 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { 
-  Globe, 
-  Palette, 
-  Wrench, 
   Zap, 
-  Settings, 
+  Cog, 
   LogOut,
   Sparkles,
-  Rocket,
-  Shield,
-  Cog,
   Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { configService, UserSettings } from "@/services/configService";
 import { useAuth } from "../contexts/AuthContext";
+import ConfigurationForm from "@/components/dashboard/ConfigurationForm";
+import FeaturesCard from "@/components/dashboard/FeaturesCard";
+import HowItWorks from "@/components/dashboard/HowItWorks";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -291,163 +284,23 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Configuration Card */}
-          <Card className="lg:col-span-2 bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
-            <CardHeader>
-              <CardTitle className="flex items-center text-white">
-                <Wrench className="mr-2 text-gold" />
-                Configuration
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Set up your landing page parameters
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="region" className="text-white">Region</Label>
-                    <Input
-                      id="region"
-                      placeholder="e.g., Global, North America, Europe"
-                      value={region}
-                      onChange={(e) => setRegion(e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="colorScheme" className="text-white">Color Scheme</Label>
-                    <Input
-                      id="colorScheme"
-                      placeholder="e.g., Gold, Black & Lemon Green"
-                      value={colorScheme}
-                      onChange={(e) => setColorScheme(e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="verticals" className="text-white">Business Verticals</Label>
-                  <Input
-                    id="verticals"
-                    placeholder="e.g., E-commerce, SaaS, Healthcare"
-                    value={verticals}
-                    onChange={(e) => setVerticals(e.target.value)}
-                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="webhook" className="text-white">Webhook URL</Label>
-                  <Input
-                    id="webhook"
-                    placeholder="https://your-webhook-url.com"
-                    value={webhook}
-                    onChange={(e) => setWebhook(e.target.value)}
-                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
-                  />
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  disabled={isLoading}
-                  className="w-full bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Rocket className="mr-2" />
-                      Generate Landing Page
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <div className="lg:col-span-2">
+            <ConfigurationForm
+              region={region}
+              verticals={verticals}
+              webhook={webhook}
+              colorScheme={colorScheme}
+              onRegionChange={setRegion}
+              onVerticalsChange={setVerticals}
+              onWebhookChange={setWebhook}
+              onColorSchemeChange={setColorScheme}
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+            />
+          </div>
           
           {/* Features Card */}
-          <div className="space-y-8">
-            <Card className="bg-gray-900/80 border border-gray-800 hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
-              <CardHeader>
-                <CardTitle className="flex items-center text-white">
-                  <Palette className="mr-2 text-green-400" />
-                  Design Features
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="bg-green-400/10 p-2 rounded-full mt-1">
-                    <Shield className="w-4 h-4 text-green-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">Responsive Design</h3>
-                    <p className="text-sm text-gray-400">Mobile-first approach for all devices</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="bg-green-400/10 p-2 rounded-full mt-1">
-                    <Sparkles className="w-4 h-4 text-green-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">AI-Powered Content</h3>
-                    <p className="text-sm text-gray-400">Generated copy optimized for conversions</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="bg-green-400/10 p-2 rounded-full mt-1">
-                    <Globe className="w-4 h-4 text-green-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">SEO Optimized</h3>
-                    <p className="text-sm text-gray-400">Built with search engines in mind</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
-              <CardHeader>
-                <CardTitle className="flex items-center text-white">
-                  <Settings className="mr-2 text-gold" />
-                  Backend Configuration
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300 mb-4">
-                  Configure your AI settings in the backend:
-                </p>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-gold rounded-full mr-2"></div>
-                    System Prompt
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-gold rounded-full mr-2"></div>
-                    API Keys
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-gold rounded-full mr-2"></div>
-                    LLM Model Selection
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-gold rounded-full mr-2"></div>
-                    Domain & Email Formats
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => navigate("/backend-config")}
-                  className="w-full mt-4 bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
-                >
-                  Configure Backend
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+          <FeaturesCard />
         </div>
         
         <Separator className="my-12 bg-gray-800" />
@@ -460,40 +313,7 @@ const Dashboard = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Configure",
-              description: "Set your business parameters and preferences",
-              icon: <Settings className="w-8 h-8 text-gold" />
-            },
-            {
-              title: "Generate",
-              description: "AI creates a custom landing page for your agency",
-              icon: <Sparkles className="w-8 h-8 text-green-400" />
-            },
-            {
-              title: "Deploy",
-              description: "Publish instantly with your branding",
-              icon: <Rocket className="w-8 h-8 text-gold" />
-            }
-          ].map((item, index) => (
-            <Card 
-              key={index} 
-              className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 group"
-            >
-              <CardHeader>
-                <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4 group-hover:bg-gold/10 transition-colors duration-300">
-                  {item.icon}
-                </div>
-                <CardTitle className="text-white">{item.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300">{item.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <HowItWorks />
       </main>
     </div>
   );
