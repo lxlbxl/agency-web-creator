@@ -49,6 +49,12 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Custom colors */
+    --gold: 45 100% 50%;
+    --gold-foreground: 0 0% 0%;
+    --green: 85 80% 50%;
+    --green-foreground: 0 0% 0%;
   }
 
   .dark {
@@ -87,6 +93,12 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Custom colors */
+    --gold: 45 100% 50%;
+    --gold-foreground: 0 0% 0%;
+    --green: 85 80% 50%;
+    --green-foreground: 0 0% 0%;
   }
 }
 
@@ -97,5 +109,31 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-gold {
+    background-color: hsl(var(--gold));
+  }
+  
+  .text-gold {
+    color: hsl(var(--gold));
+  }
+  
+  .border-gold {
+    border-color: hsl(var(--gold));
+  }
+  
+  .bg-green {
+    background-color: hsl(var(--green));
+  }
+  
+  .text-green {
+    color: hsl(var(--green));
+  }
+  
+  .border-green {
+    border-color: hsl(var(--green));
   }
 }
