@@ -1,26 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Shield, Loader2 } from "lucide-react";
+import { 
+  Key, 
+  Bot, 
+  Settings, 
+  Save, 
+  RefreshCw,
+  Shield,
+  Globe,
+  Info,
+  User,
+  Lock
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { configService, BackendConfig as BackendConfigType } from "@/services/configService";
-import { useAuth } from "../contexts/AuthContext";
-import ApiConfigForm from "../components/backend-config/ApiConfigForm";
-import AdminCredentialsForm from "../components/backend-config/AdminCredentialsForm";
-import DomainEmailForm from "../components/backend-config/DomainEmailForm";
-import SecurityGuidelines from "../components/backend-config/SecurityGuidelines";
-import ConfigurationTips from "../components/backend-config/ConfigurationTips";
 
 const BackendConfig = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [isConfigLoading, setIsConfigLoading] = useState(true);
   
-  // Form states
+  // Form states - in a real app, these would be loaded from backend
   const [apiKey, setApiKey] = useState("");
   const [model, setModel] = useState("openai/gpt-4");
   const [systemPrompt, setSystemPrompt] = useState(`You are an expert web designer specializing in creating stunning single-page websites for automation agencies. Create modern, responsive HTML/CSS/JS landing pages with the following specifications:
@@ -42,56 +48,62 @@ const BackendConfig = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!session) {
-      navigate("/login");
-    }
-  }, [session, navigate]);
-
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    try {
-      // Save backend configuration
-      const backendConfig: Omit<BackendConfigType, 'id' | 'updated_at'> = {
-        api_key: apiKey,
-        model: model,
-        system_prompt: systemPrompt,
-        domain_format: domainFormat,
-        email_format: emailFormat,
-        admin_email: adminEmail
-      };
-      
-      await configService.saveBackendConfig(backendConfig);
-      
+    // Simulate saving configuration
+    setTimeout(() => {
+      setIsLoading(false);
       toast({
         title: "Configuration Saved",
         description: "Your backend settings have been updated successfully.",
       });
-    } catch (error: any) {
-      console.error("Error saving configuration:", error);
+    }, 1000);
+  };
+
+  const handleTestConnection = async () => {
+    if (!apiKey) {
       toast({
-        title: "Save Failed",
-        description: "Failed to save configuration. Please try again.",
+        title: "API Key Required",
+        description: "Please enter your OpenRouter API key before testing the connection.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      // Test the API key with a simple request to OpenRouter
+      const response = await fetch("https://openrouter.ai/api/v1/auth/key", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Connection Successful",
+          description: "Successfully connected to the OpenRouter API.",
+        });
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API request failed with status ${response.status}`);
+      }
+    } catch (error: any) {
+      console.error("Connection test failed:", error);
+      toast({
+        title: "Connection Failed",
+        description: error.message || "Failed to connect to the OpenRouter API. Please check your API key.",
         variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
   };
-
-  if (!session) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-gold mx-auto" />
-          <p className="text-white mt-4">Redirecting to login...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-gray-100">
@@ -133,36 +145,243 @@ const BackendConfig = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Configuration Card */}
-          <div className="lg:col-span-2">
-            <ApiConfigForm
-              apiKey={apiKey}
-              model={model}
-              systemPrompt={systemPrompt}
-              onApiKeyChange={setApiKey}
-              onModelChange={setModel}
-              onSystemPromptChange={setSystemPrompt}
-              onSave={handleSave}
-              isLoading={isLoading}
-            />
-          </div>
+          <Card className="lg:col-span-2 bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
+            <CardHeader>
+              <CardTitle className="flex items-center text-white">
+                <Settings className="mr-2 text-gold" />
+                API Configuration
+              </CardTitle>
+              <CardDescription className="text-gray-400">
+                Set up your OpenRouter API connection and system parameters
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSave} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="apiKey" className="text-white flex items-center">
+                    <Key className="w-4 h-4 mr-2 text-gold" />
+                    OpenRouter API Key
+                  </Label>
+                  <Input
+                    id="apiKey"
+                    type="password"
+                    placeholder="sk-or-...your-api-key..."
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
+                  />
+                  <p className="text-sm text-gray-400">
+                    Get your API key from <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">OpenRouter</a>
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="model" className="text-white flex items-center">
+                    <Bot className="w-4 h-4 mr-2 text-gold" />
+                    LLM Model
+                  </Label>
+                  <Input
+                    id="model"
+                    placeholder="e.g., openai/gpt-4, anthropic/claude-3-opus"
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="systemPrompt" className="text-white flex items-center">
+                    <Info className="w-4 h-4 mr-2 text-gold" />
+                    System Prompt
+                  </Label>
+                  <Textarea
+                    id="systemPrompt"
+                    placeholder="Enter the system prompt for the AI..."
+                    value={systemPrompt}
+                    onChange={(e) => setSystemPrompt(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold min-h-[200px]"
+                  />
+                  <p className="text-sm text-gray-400">
+                    This prompt defines the AI's role and instructions. The dashboard inputs will be sent as user prompts.
+                  </p>
+                </div>
+                
+                <div className="flex space-x-4">
+                  <Button 
+                    type="button"
+                    onClick={handleTestConnection}
+                    disabled={isLoading}
+                    className="bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Testing...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Test Connection
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button 
+                    type="submit" 
+                    disabled={isLoading}
+                    className="bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Configuration
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
           
           {/* Additional Settings Card */}
           <div className="space-y-8">
-            <AdminCredentialsForm
-              adminEmail={adminEmail}
-              adminPassword={adminPassword}
-              onAdminEmailChange={setAdminEmail}
-              onAdminPasswordChange={setAdminPassword}
-            />
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-white">
+                  <User className="mr-2 text-green-400" />
+                  Admin Credentials
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="adminEmail" className="text-white">
+                    Admin Email
+                  </Label>
+                  <Input
+                    id="adminEmail"
+                    type="email"
+                    placeholder="admin@example.com"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="adminPassword" className="text-white">
+                    Admin Password
+                  </Label>
+                  <Input
+                    id="adminPassword"
+                    type="password"
+                    placeholder="Enter new password"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
+                  />
+                </div>
+                
+                <Button 
+                  onClick={() => {
+                    toast({
+                      title: "Credentials Updated",
+                      description: "Admin credentials have been updated successfully.",
+                    });
+                  }}
+                  className="w-full bg-green-400 text-black hover:bg-green-400/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-400/50"
+                >
+                  Update Credentials
+                </Button>
+              </CardContent>
+            </Card>
             
-            <DomainEmailForm
-              domainFormat={domainFormat}
-              emailFormat={emailFormat}
-              onDomainFormatChange={setDomainFormat}
-              onEmailFormatChange={setEmailFormat}
-            />
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-white">
+                  <Globe className="mr-2 text-gold" />
+                  Domain & Email Formats
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="domainFormat" className="text-white">
+                    Domain Format
+                  </Label>
+                  <Input
+                    id="domainFormat"
+                    placeholder="e.g., {business}-{region}.com"
+                    value={domainFormat}
+                    onChange={(e) => setDomainFormat(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
+                  />
+                  <p className="text-sm text-gray-400">
+                    Format for generated domains
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="emailFormat" className="text-white">
+                    Email Format
+                  </Label>
+                  <Input
+                    id="emailFormat"
+                    placeholder="e.g., contact@{domain}"
+                    value={emailFormat}
+                    onChange={(e) => setEmailFormat(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
+                  />
+                  <p className="text-sm text-gray-400">
+                    Format for contact emails
+                  </p>
+                </div>
+                
+                <Button 
+                  onClick={() => {
+                    toast({
+                      title: "Formats Saved",
+                      description: "Domain and email formats updated successfully.",
+                    });
+                  }}
+                  className="w-full bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
+                >
+                  Save Formats
+                </Button>
+              </CardContent>
+            </Card>
             
-            <SecurityGuidelines />
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-white">
+                  <Shield className="mr-2 text-gold" />
+                  Security Guidelines
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 text-sm text-gray-300">
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-gold rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                    <span>Store API keys securely and never expose them in client-side code</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-gold rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                    <span>Use environment variables for sensitive configuration</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-gold rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                    <span>Regularly rotate API keys for enhanced security</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-gold rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                    <span>Monitor API usage to detect unusual activity</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
           </div>
         </div>
         
@@ -176,7 +395,47 @@ const BackendConfig = () => {
           </p>
         </div>
         
-        <ConfigurationTips />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            {
+              title: "Crafting Effective System Prompts",
+              description: "Provide clear instructions about your brand voice, target audience, and key messaging to ensure consistent output.",
+              icon: <Bot className="w-6 h-6 text-gold" />
+            },
+            {
+              title: "Choosing the Right Model",
+              description: "Select models based on your needs - GPT-4 for complex content, Claude for nuanced understanding, or Llama for cost efficiency.",
+              icon: <Settings className="w-6 h-6 text-green-400" />
+            },
+            {
+              title: "Optimizing Domain Formats",
+              description: "Use descriptive domain formats that clearly indicate the business type and region for better SEO and user recognition.",
+              icon: <Globe className="w-6 h-6 text-gold" />
+            },
+            {
+              title: "Testing API Connections",
+              description: "Regularly test your API connections to ensure uninterrupted service and catch configuration issues early.",
+              icon: <RefreshCw className="w-6 h-6 text-green-400" />
+            }
+          ].map((tip, index) => (
+            <Card 
+              key={index} 
+              className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20"
+            >
+              <CardHeader>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mr-3">
+                    {tip.icon}
+                  </div>
+                  <CardTitle className="text-white">{tip.title}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300">{tip.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </main>
     </div>
   );

@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,34 +12,30 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    try {
-      await signIn(email, password);
-      navigate("/dashboard");
-      toast({
-        title: "Login Successful",
-        description: "Welcome back to your dashboard!",
-      });
-    } catch (error: any) {
-      console.error("Login error:", error);
-      toast({
-        title: "Login Failed",
-        description: error.message || "Invalid credentials. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
+    // Simulate login process
+    setTimeout(() => {
       setIsLoading(false);
-    }
-  };
-
-  const handleAdminLogin = async () => {
-    setEmail("admin");
-    setPassword("Justme22@@");
+      // In a real app, this would validate against backend credentials
+      if (email && password) {
+        localStorage.setItem("isAuthenticated", "true");
+        navigate("/dashboard");
+        toast({
+          title: "Login Successful",
+          description: "Welcome back to your dashboard!",
+        });
+      } else {
+        toast({
+          title: "Login Failed",
+          description: "Please enter both email and password",
+          variant: "destructive",
+        });
+      }
+    }, 1000);
   };
 
   return (
@@ -56,8 +51,8 @@ const Login = () => {
               <Label htmlFor="email" className="text-white">Email</Label>
               <Input
                 id="email"
-                type="text"
-                placeholder="Enter your email or username"
+                type="email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
@@ -84,17 +79,6 @@ const Login = () => {
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
           </form>
-          
-          <div className="mt-4 text-center">
-            <Button 
-              type="button"
-              onClick={handleAdminLogin}
-              variant="outline"
-              className="text-gold border-gold hover:bg-gold/10"
-            >
-              Use Admin Credentials
-            </Button>
-          </div>
         </CardContent>
         <CardFooter className="flex flex-col">
           <div className="text-sm text-gray-500 text-center">
