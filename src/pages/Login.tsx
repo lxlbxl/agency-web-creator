@@ -30,7 +30,7 @@ const Login = () => {
       console.error("Login error:", error);
       toast({
         title: "Login Failed",
-        description: error.message || "Invalid credentials",
+        description: error.message || "Invalid credentials. Please try again.",
         variant: "destructive",
       });
     } finally {
