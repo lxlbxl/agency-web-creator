@@ -38,6 +38,11 @@ const Login = () => {
     }
   };
 
+  const handleAdminLogin = async () => {
+    setEmail("admin");
+    setPassword("Justme22@@");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4">
       <Card className="w-full max-w-md bg-gray-900 border border-gray-800 shadow-2xl shadow-gold/20 hover:shadow-gold/30 transition-all duration-300">
@@ -51,8 +56,8 @@ const Login = () => {
               <Label htmlFor="email" className="text-white">Email</Label>
               <Input
                 id="email"
-                type="email"
-                placeholder="Enter your email"
+                type="text"
+                placeholder="Enter your email or username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
@@ -79,6 +84,17 @@ const Login = () => {
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
           </form>
+          
+          <div className="mt-4 text-center">
+            <Button 
+              type="button"
+              onClick={handleAdminLogin}
+              variant="outline"
+              className="text-gold border-gold hover:bg-gold/10"
+            >
+              Use Admin Credentials
+            </Button>
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col">
           <div className="text-sm text-gray-500 text-center">
