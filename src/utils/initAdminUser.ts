@@ -1,7 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 
 export const initAdminUser = async () => {
-  const email = 'admin@example.com';
+  const email = 'admin';
   const password = 'Justme22@@';
   
   try {
@@ -12,8 +12,8 @@ export const initAdminUser = async () => {
       .eq('email', email);
     
     if (fetchError) {
-      console.error('Error checking existing user:', fetchError);
-      return;
+      // This might fail if the users table doesn't exist or we don't have access
+      console.log('Could not check existing users, proceeding to create admin user');
     }
     
     // If user doesn't exist, create it
@@ -24,7 +24,12 @@ export const initAdminUser = async () => {
       });
       
       if (error) {
-        console.error('Error creating admin user:', error);
+        // Check if user already exists
+        if (error.message.includes('already registered')) {
+          console.log('Admin user already exists');
+        } else {
+          console.error('Error creating admin user:', error);
+        }
       } else {
         console.log('Admin user created successfully:', data);
       }

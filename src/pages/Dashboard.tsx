@@ -30,41 +30,10 @@ const Dashboard = () => {
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!session && !isSettingsLoading) {
+    if (!session) {
       navigate("/login");
     }
-  }, [session, navigate, isSettingsLoading]);
-
-  // Load user settings on component mount
-  useEffect(() => {
-    const loadUserSettings = async () => {
-      if (!session) return;
-      
-      setIsSettingsLoading(true);
-      try {
-        const settings = await configService.getUserSettings();
-        if (settings) {
-          setRegion(settings.region || "");
-          setVerticals(settings.verticals || "");
-          setWebhook(settings.webhook_url || "");
-          setColorScheme(settings.color_scheme || "");
-        }
-      } catch (error: any) {
-        console.error("Error loading user settings:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load your settings. Using default values.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsSettingsLoading(false);
-      }
-    };
-
-    if (session) {
-      loadUserSettings();
-    }
-  }, [session, toast]);
+  }, [session, navigate]);
 
   const handleLogout = async () => {
     try {
@@ -79,156 +48,12 @@ const Dashboard = () => {
     }
   };
 
-  // Function to get backend configuration from localStorage or API
-  const getBackendConfig = async () => {
-    // In a real app, this would fetch from an API or localStorage
-    // For now, we'll use mock data
-    return {
-      apiKey: "sk-or-...", // This should come from secure storage
-      model: "openai/gpt-4", // Default model
-      systemPrompt: "You are an expert web designer specializing in creating stunning single-page websites for automation agencies. Create modern, responsive HTML/CSS/JS landing pages with the following specifications."
-    };
-  };
-
-  // Function to call OpenRouter API
-  const generateLandingPage = async (userPrompt: string, systemPrompt: string) => {
-    const config = await getBackendConfig();
-    
-    try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${config.apiKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: config.model,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt }
-          ],
-          temperature: 0.7,
-          max_tokens: 4000
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data.choices[0].message.content;
-    } catch (error: any) {
-      console.error("Error generating landing page:", error);
-      throw error;
-    }
-  };
-
-  // Function to save generated website
-  const saveGeneratedWebsite = async (htmlContent: string) => {
-    // In a real app, this would save to a database or file system
-    // For now, we'll just log to console and create a blob
-    const timestamp = new Date().toISOString();
-    const filename = `landing-page-${timestamp.replace(/[:.]/g, '-')}.html`;
-    
-    // Log to backend (in a real app, this would be an API call)
-    console.log("Generated website URL:", `${window.location.origin}/${filename}`);
-    
-    // Create a downloadable file
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    
-    // Create a temporary link and trigger download
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    return `${window.location.origin}/${filename}`;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      // Save user settings
-      const userSettings: Omit<UserSettings, 'id' | 'updated_at'> = {
-        region: region || "",
-        verticals: verticals || "",
-        color_scheme: colorScheme || "",
-        webhook_url: webhook || ""
-      };
-      
-      await configService.saveUserSettings(userSettings);
-      
-      // Get backend configuration
-      const config = await getBackendConfig();
-      
-      // Create user prompt from form data
-      const userPrompt = `Create a stunning single-page website/landing page for an automation agency with the following specifications:
-      
-      Region: ${region || 'Not specified'}
-      Business Verticals: ${verticals || 'Not specified'}
-      Color Scheme: ${colorScheme || 'Gold, Black & Lemon Green (default)'}
-      Webhook URL for form submissions: ${webhook || 'Not specified'}
-      
-      Requirements:
-      1. Modern, responsive design that works on all devices
-      2. Use the specified color scheme (Gold, Black & Lemon Green) throughout
-      3. Include sections for:
-         - Hero section with compelling headline and call-to-action
-         - Services offered
-         - About the agency
-         - Testimonials (if applicable)
-         - Contact form that submits to the provided webhook URL
-      4. Optimize for conversions with clear CTAs
-      5. Include appropriate animations and interactive elements
-      6. Ensure fast loading and clean code
-      7. Return only valid HTML/CSS/JS code without any additional explanations
-      
-      Please generate the complete HTML code for this landing page.`;
-      
-      // Generate landing page using LLM
-      toast({
-        title: "Generating Landing Page",
-        description: "Creating your custom landing page with AI...",
-      });
-      
-      const generatedCode = await generateLandingPage(userPrompt, config.systemPrompt);
-      
-      // Save the generated website
-      const websiteUrl = await saveGeneratedWebsite(generatedCode);
-      
-      toast({
-        title: "Landing Page Generated!",
-        description: `Your landing page has been created successfully. URL: ${websiteUrl}`,
-      });
-      
-      // Log to backend (in a real implementation, this would be an API call)
-      console.log("Landing page generated and saved at:", websiteUrl);
-      
-    } catch (error: any) {
-      console.error("Error generating landing page:", error);
-      toast({
-        title: "Generation Failed",
-        description: "Failed to generate landing page. Please check your configuration and try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (isSettingsLoading) {
+  if (!session) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-gold mx-auto" />
-          <p className="text-white mt-4">Loading your settings...</p>
+          <p className="text-white mt-4">Redirecting to login...</p>
         </div>
       </div>
     );
@@ -294,7 +119,7 @@ const Dashboard = () => {
               onVerticalsChange={setVerticals}
               onWebhookChange={setWebhook}
               onColorSchemeChange={setColorScheme}
-              onSubmit={handleSubmit}
+              onSubmit={() => {}}
               isLoading={isLoading}
             />
           </div>

@@ -44,43 +44,10 @@ const BackendConfig = () => {
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!session && !isConfigLoading) {
+    if (!session) {
       navigate("/login");
     }
-  }, [session, navigate, isConfigLoading]);
-
-  // Load backend configuration on component mount
-  useEffect(() => {
-    const loadBackendConfig = async () => {
-      if (!session) return;
-      
-      setIsConfigLoading(true);
-      try {
-        const config = await configService.getBackendConfig();
-        if (config) {
-          setApiKey(config.api_key || "");
-          setModel(config.model || "openai/gpt-4");
-          setSystemPrompt(config.system_prompt || "");
-          setDomainFormat(config.domain_format || "");
-          setEmailFormat(config.email_format || "");
-          setAdminEmail(config.admin_email || "");
-        }
-      } catch (error: any) {
-        console.error("Error loading backend config:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load your configuration. Using default values.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsConfigLoading(false);
-      }
-    };
-
-    if (session) {
-      loadBackendConfig();
-    }
-  }, [session, toast]);
+  }, [session, navigate]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,12 +82,12 @@ const BackendConfig = () => {
     }
   };
 
-  if (isConfigLoading) {
+  if (!session) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-gold mx-auto" />
-          <p className="text-white mt-4">Loading your configuration...</p>
+          <p className="text-white mt-4">Redirecting to login...</p>
         </div>
       </div>
     );

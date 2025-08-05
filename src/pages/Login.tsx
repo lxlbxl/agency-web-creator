@@ -39,7 +39,7 @@ const Login = () => {
   };
 
   const handleAdminLogin = async () => {
-    setEmail("admin@example.com");
+    setEmail("admin");
     setPassword("Justme22@@");
   };
 
@@ -56,8 +56,8 @@ const Login = () => {
               <Label htmlFor="email" className="text-white">Email</Label>
               <Input
                 id="email"
-                type="email"
-                placeholder="Enter your email"
+                type="text"
+                placeholder="Enter your email or username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
