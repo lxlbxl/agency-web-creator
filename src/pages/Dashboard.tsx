@@ -58,19 +58,19 @@ const Dashboard = () => {
               AI Powered
             </Badge>
             <Button 
-              variant="outline" 
+              variant="default" 
               size="sm" 
               onClick={() => navigate("/backend-config")}
-              className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300"
+              className="bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
             >
               <Cog className="w-4 h-4 mr-2" />
               Backend Config
             </Button>
             <Button 
-              variant="outline" 
+              variant="default" 
               size="sm" 
               onClick={handleLogout}
-              className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300"
+              className="bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
@@ -149,7 +149,7 @@ const Dashboard = () => {
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-gold text-black font-bold py-6 text-lg transition-all duration-300 hover:shadow-lg hover:shadow-gold/50 hover:scale-105 hover:bg-gold/90"
+                  className="w-full bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
                 >
                   <Rocket className="mr-2" />
                   Generate Landing Page
@@ -229,7 +229,7 @@ const Dashboard = () => {
                 </ul>
                 <Button 
                   onClick={() => navigate("/backend-config")}
-                  className="w-full mt-4 bg-gold text-black font-bold transition-all duration-300 hover:shadow-lg hover:shadow-gold/50 hover:scale-105 hover:bg-gold/90"
+                  className="w-full mt-4 bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
                 >
                   Configure Backend
                 </Button>

@@ -76,10 +76,10 @@ const BackendConfig = () => {
               Backend Configuration
             </Badge>
             <Button 
-              variant="outline" 
+              variant="default" 
               size="sm" 
               onClick={() => navigate("/")}
-              className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300"
+              className="bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
             >
               Back to Dashboard
             </Button>
@@ -162,8 +162,7 @@ const BackendConfig = () => {
                     type="button"
                     onClick={handleTestConnection}
                     disabled={isLoading}
-                    variant="outline"
-                    className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/30"
+                    className="bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
                   >
                     {isLoading ? (
                       <>
@@ -181,7 +180,7 @@ const BackendConfig = () => {
                   <Button 
                     type="submit" 
                     disabled={isLoading}
-                    className="bg-gold text-black font-bold py-6 text-lg transition-all duration-300 hover:shadow-lg hover:shadow-gold/50 hover:scale-105 hover:bg-gold/90"
+                    className="bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
                   >
                     {isLoading ? (
                       <>
@@ -249,7 +248,7 @@ const BackendConfig = () => {
                       description: "Domain and email formats updated successfully.",
                     });
                   }}
-                  className="w-full bg-green-400 text-black font-bold transition-all duration-300 hover:shadow-lg hover:shadow-green-400/50 hover:scale-105 hover:bg-green-400/90"
+                  className="w-full bg-green-400 text-black hover:bg-green-400/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-400/50"
                 >
                   Save Formats
                 </Button>
