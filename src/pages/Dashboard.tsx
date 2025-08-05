@@ -61,7 +61,7 @@ const Dashboard = () => {
               variant="outline" 
               size="sm" 
               onClick={() => navigate("/backend-config")}
-              className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+              className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300"
             >
               <Cog className="w-4 h-4 mr-2" />
               Backend Config
@@ -70,7 +70,7 @@ const Dashboard = () => {
               variant="outline" 
               size="sm" 
               onClick={handleLogout}
-              className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+              className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
@@ -81,21 +81,21 @@ const Dashboard = () => {
 
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">AI Landing Page Generator</h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4 text-white">AI Landing Page Generator</h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Create stunning single-page websites for automation agencies with AI assistance
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Configuration Card */}
-          <Card className="lg:col-span-2 bg-black/50 border-gray-800 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10">
+          <Card className="lg:col-span-2 bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-white">
                 <Wrench className="mr-2 text-gold" />
                 Configuration
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-400">
                 Set up your landing page parameters
               </CardDescription>
             </CardHeader>
@@ -103,53 +103,53 @@ const Dashboard = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="region" className="text-gray-200">Region</Label>
+                    <Label htmlFor="region" className="text-white">Region</Label>
                     <Input
                       id="region"
                       placeholder="e.g., Global, North America, Europe"
                       value={region}
                       onChange={(e) => setRegion(e.target.value)}
-                      className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                      className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="colorScheme" className="text-gray-200">Color Scheme</Label>
+                    <Label htmlFor="colorScheme" className="text-white">Color Scheme</Label>
                     <Input
                       id="colorScheme"
                       placeholder="e.g., Gold, Black & Lemon Green"
                       value={colorScheme}
                       onChange={(e) => setColorScheme(e.target.value)}
-                      className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                      className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="verticals" className="text-gray-200">Business Verticals</Label>
+                  <Label htmlFor="verticals" className="text-white">Business Verticals</Label>
                   <Input
                     id="verticals"
                     placeholder="e.g., E-commerce, SaaS, Healthcare"
                     value={verticals}
                     onChange={(e) => setVerticals(e.target.value)}
-                    className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="webhook" className="text-gray-200">Webhook URL</Label>
+                  <Label htmlFor="webhook" className="text-white">Webhook URL</Label>
                   <Input
                     id="webhook"
                     placeholder="https://your-webhook-url.com"
                     value={webhook}
                     onChange={(e) => setWebhook(e.target.value)}
-                    className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                   />
                 </div>
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-gradient-to-r from-gold to-green-500 hover:from-gold/90 hover:to-green-500/90 text-black font-bold py-6 text-lg transition-all duration-300 hover:scale-[1.02]"
+                  className="w-full bg-gold text-black font-bold py-6 text-lg transition-all duration-300 hover:shadow-lg hover:shadow-gold/50 hover:scale-105 hover:bg-gold/90"
                 >
                   <Rocket className="mr-2" />
                   Generate Landing Page
@@ -160,9 +160,9 @@ const Dashboard = () => {
           
           {/* Features Card */}
           <div className="space-y-8">
-            <Card className="bg-black/50 border-gray-800 hover:border-green-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/10">
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-white">
                   <Palette className="mr-2 text-green-400" />
                   Design Features
                 </CardTitle>
@@ -173,7 +173,7 @@ const Dashboard = () => {
                     <Shield className="w-4 h-4 text-green-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Responsive Design</h3>
+                    <h3 className="font-semibold text-white">Responsive Design</h3>
                     <p className="text-sm text-gray-400">Mobile-first approach for all devices</p>
                   </div>
                 </div>
@@ -182,7 +182,7 @@ const Dashboard = () => {
                     <Sparkles className="w-4 h-4 text-green-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">AI-Powered Content</h3>
+                    <h3 className="font-semibold text-white">AI-Powered Content</h3>
                     <p className="text-sm text-gray-400">Generated copy optimized for conversions</p>
                   </div>
                 </div>
@@ -191,25 +191,25 @@ const Dashboard = () => {
                     <Globe className="w-4 h-4 text-green-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">SEO Optimized</h3>
+                    <h3 className="font-semibold text-white">SEO Optimized</h3>
                     <p className="text-sm text-gray-400">Built with search engines in mind</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-black/50 border-gray-800 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10">
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-white">
                   <Settings className="mr-2 text-gold" />
                   Backend Configuration
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400 mb-4">
+                <p className="text-gray-300 mb-4">
                   Configure your AI settings in the backend:
                 </p>
-                <ul className="space-y-2 text-sm">
+                <ul className="space-y-2 text-sm text-gray-300">
                   <li className="flex items-center">
                     <div className="w-2 h-2 bg-gold rounded-full mr-2"></div>
                     System Prompt
@@ -229,7 +229,7 @@ const Dashboard = () => {
                 </ul>
                 <Button 
                   onClick={() => navigate("/backend-config")}
-                  className="w-full mt-4 bg-gradient-to-r from-gold to-green-500 hover:from-gold/90 hover:to-green-500/90 text-black font-bold transition-all duration-300"
+                  className="w-full mt-4 bg-gold text-black font-bold transition-all duration-300 hover:shadow-lg hover:shadow-gold/50 hover:scale-105 hover:bg-gold/90"
                 >
                   Configure Backend
                 </Button>
@@ -242,8 +242,8 @@ const Dashboard = () => {
         
         {/* Preview Section */}
         <div className="text-center mb-8">
-          <h3 className="text-3xl font-bold mb-4">How It Works</h3>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <h3 className="text-3xl font-bold mb-4 text-white">How It Works</h3>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Our AI generates stunning landing pages in seconds
           </p>
         </div>
@@ -268,16 +268,16 @@ const Dashboard = () => {
           ].map((item, index) => (
             <Card 
               key={index} 
-              className="bg-black/50 border-gray-800 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10 group"
+              className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 group"
             >
               <CardHeader>
-                <div className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center mb-4 group-hover:bg-gold/10 transition-colors duration-300">
+                <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4 group-hover:bg-gold/10 transition-colors duration-300">
                   {item.icon}
                 </div>
-                <CardTitle>{item.title}</CardTitle>
+                <CardTitle className="text-white">{item.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">{item.description}</p>
+                <p className="text-gray-300">{item.description}</p>
               </CardContent>
             </Card>
           ))}

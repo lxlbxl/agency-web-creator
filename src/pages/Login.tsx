@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4">
-      <Card className="w-full max-w-md bg-gray-900 border border-gray-800 shadow-2xl shadow-gold/10 hover:shadow-gold/20 transition-all duration-300">
+      <Card className="w-full max-w-md bg-gray-900 border border-gray-800 shadow-2xl shadow-gold/20 hover:shadow-gold/30 transition-all duration-300">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-white">Agency Login</CardTitle>
           <CardDescription className="text-gray-400">Enter your credentials to access the dashboard</CardDescription>
@@ -47,33 +47,33 @@ const Login = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-200">Email</Label>
+              <Label htmlFor="email" className="text-white">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold"
+                className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-200">Password</Label>
+              <Label htmlFor="password" className="text-white">Password</Label>
               <Input
                 id="password"
                 type="password"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold"
+                className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                 required
               />
             </div>
             <Button 
               type="submit" 
               disabled={isLoading}
-              className="w-full bg-gold hover:bg-gold/90 text-black font-bold py-6 text-lg transition-all duration-300 hover:scale-[1.02]"
+              className="w-full bg-gold text-black font-bold py-6 text-lg transition-all duration-300 hover:shadow-lg hover:shadow-gold/50 hover:scale-105 hover:bg-gold/90"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>

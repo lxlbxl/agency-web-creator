@@ -79,7 +79,7 @@ const BackendConfig = () => {
               variant="outline" 
               size="sm" 
               onClick={() => navigate("/")}
-              className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+              className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300"
             >
               Back to Dashboard
             </Button>
@@ -89,29 +89,29 @@ const BackendConfig = () => {
 
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Backend Configuration</h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4 text-white">Backend Configuration</h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Configure your AI settings, API keys, and system parameters
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Configuration Card */}
-          <Card className="lg:col-span-2 bg-black/50 border-gray-800 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10">
+          <Card className="lg:col-span-2 bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-white">
                 <Settings className="mr-2 text-gold" />
                 API Configuration
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-400">
                 Set up your OpenRouter API connection and system parameters
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSave} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="apiKey" className="text-gray-200 flex items-center">
-                    <Key className="w-4 h-4 mr-2" />
+                  <Label htmlFor="apiKey" className="text-white flex items-center">
+                    <Key className="w-4 h-4 mr-2 text-gold" />
                     OpenRouter API Key
                   </Label>
                   <Input
@@ -120,7 +120,7 @@ const BackendConfig = () => {
                     placeholder="sk-or-...your-api-key..."
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
-                    className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                   />
                   <p className="text-sm text-gray-400">
                     Get your API key from <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">OpenRouter</a>
@@ -128,8 +128,8 @@ const BackendConfig = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="model" className="text-gray-200 flex items-center">
-                    <Bot className="w-4 h-4 mr-2" />
+                  <Label htmlFor="model" className="text-white flex items-center">
+                    <Bot className="w-4 h-4 mr-2 text-gold" />
                     LLM Model
                   </Label>
                   <Input
@@ -137,12 +137,12 @@ const BackendConfig = () => {
                     placeholder="e.g., openai/gpt-4, anthropic/claude-3-opus"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
-                    className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="systemPrompt" className="text-gray-200">
+                  <Label htmlFor="systemPrompt" className="text-white">
                     System Prompt
                   </Label>
                   <Textarea
@@ -150,7 +150,7 @@ const BackendConfig = () => {
                     placeholder="Enter the system prompt for the AI..."
                     value={systemPrompt}
                     onChange={(e) => setSystemPrompt(e.target.value)}
-                    className="bg-gray-900 border-gray-700 text-white focus:ring-gold min-h-[200px]"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold min-h-[200px]"
                   />
                   <p className="text-sm text-gray-400">
                     This prompt will guide the AI when generating landing pages
@@ -163,7 +163,7 @@ const BackendConfig = () => {
                     onClick={handleTestConnection}
                     disabled={isLoading}
                     variant="outline"
-                    className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+                    className="border-gray-700 text-white hover:bg-gold hover:text-black hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/30"
                   >
                     {isLoading ? (
                       <>
@@ -181,7 +181,7 @@ const BackendConfig = () => {
                   <Button 
                     type="submit" 
                     disabled={isLoading}
-                    className="bg-gradient-to-r from-gold to-green-500 hover:from-gold/90 hover:to-green-500/90 text-black font-bold py-6 text-lg transition-all duration-300 hover:scale-[1.02]"
+                    className="bg-gold text-black font-bold py-6 text-lg transition-all duration-300 hover:shadow-lg hover:shadow-gold/50 hover:scale-105 hover:bg-gold/90"
                   >
                     {isLoading ? (
                       <>
@@ -202,16 +202,16 @@ const BackendConfig = () => {
           
           {/* Additional Settings Card */}
           <div className="space-y-8">
-            <Card className="bg-black/50 border-gray-800 hover:border-green-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/10">
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-white">
                   <Globe className="mr-2 text-green-400" />
                   Domain & Email Formats
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="domainFormat" className="text-gray-200">
+                  <Label htmlFor="domainFormat" className="text-white">
                     Domain Format
                   </Label>
                   <Input
@@ -219,7 +219,7 @@ const BackendConfig = () => {
                     placeholder="e.g., {business}-{region}.com"
                     value={domainFormat}
                     onChange={(e) => setDomainFormat(e.target.value)}
-                    className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
                   />
                   <p className="text-sm text-gray-400">
                     Format for generated domains
@@ -227,7 +227,7 @@ const BackendConfig = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="emailFormat" className="text-gray-200">
+                  <Label htmlFor="emailFormat" className="text-white">
                     Email Format
                   </Label>
                   <Input
@@ -235,7 +235,7 @@ const BackendConfig = () => {
                     placeholder="e.g., contact@{domain}"
                     value={emailFormat}
                     onChange={(e) => setEmailFormat(e.target.value)}
-                    className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
                   />
                   <p className="text-sm text-gray-400">
                     Format for contact emails
@@ -249,22 +249,22 @@ const BackendConfig = () => {
                       description: "Domain and email formats updated successfully.",
                     });
                   }}
-                  className="w-full bg-gradient-to-r from-gold to-green-500 hover:from-gold/90 hover:to-green-500/90 text-black font-bold transition-all duration-300"
+                  className="w-full bg-green-400 text-black font-bold transition-all duration-300 hover:shadow-lg hover:shadow-green-400/50 hover:scale-105 hover:bg-green-400/90"
                 >
                   Save Formats
                 </Button>
               </CardContent>
             </Card>
             
-            <Card className="bg-black/50 border-gray-800 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10">
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-white">
                   <Shield className="mr-2 text-gold" />
                   Security Guidelines
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3 text-sm">
+                <ul className="space-y-3 text-sm text-gray-300">
                   <li className="flex items-start">
                     <div className="w-2 h-2 bg-gold rounded-full mt-2 mr-2 flex-shrink-0"></div>
                     <span>Store API keys securely and never expose them in client-side code</span>
@@ -291,8 +291,8 @@ const BackendConfig = () => {
         
         {/* Configuration Tips */}
         <div className="text-center mb-8">
-          <h3 className="text-3xl font-bold mb-4">Configuration Tips</h3>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <h3 className="text-3xl font-bold mb-4 text-white">Configuration Tips</h3>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Best practices for optimizing your AI landing page generation
           </p>
         </div>
@@ -322,18 +322,18 @@ const BackendConfig = () => {
           ].map((tip, index) => (
             <Card 
               key={index} 
-              className="bg-black/50 border-gray-800 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10"
+              className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20"
             >
               <CardHeader>
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center mr-3">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mr-3">
                     {tip.icon}
                   </div>
-                  <CardTitle>{tip.title}</CardTitle>
+                  <CardTitle className="text-white">{tip.title}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400">{tip.description}</p>
+                <p className="text-gray-300">{tip.description}</p>
               </CardContent>
             </Card>
           ))}
