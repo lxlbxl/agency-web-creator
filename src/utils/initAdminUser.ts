@@ -1,7 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 
 export const initAdminUser = async () => {
-  const email = 'admin';
+  const email = 'admin@example.com';
   const password = 'Justme22@@';
   
   try {
