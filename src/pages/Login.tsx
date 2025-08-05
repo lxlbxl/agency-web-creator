@@ -17,10 +17,10 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate login process
+    // Simple authentication - in a real app, this would validate against a backend
     setTimeout(() => {
       setIsLoading(false);
-      // In a real app, this would validate against backend credentials
+      // For demo purposes, any non-empty email and password works
       if (email && password) {
         localStorage.setItem("isAuthenticated", "true");
         navigate("/dashboard");
@@ -82,7 +82,7 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex flex-col">
           <div className="text-sm text-gray-500 text-center">
-            Contact your administrator for login credentials
+            Demo credentials: any email and password
           </div>
         </CardFooter>
       </Card>
