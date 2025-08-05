@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,15 +21,44 @@ import {
   Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { configService, UserSettings } from "@/services/configService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSettingsLoading, setIsSettingsLoading] = useState(true);
   const [region, setRegion] = useState("");
   const [verticals, setVerticals] = useState("");
   const [webhook, setWebhook] = useState("");
   const [colorScheme, setColorScheme] = useState("");
+
+  // Load user settings on component mount
+  useEffect(() => {
+    const loadUserSettings = async () => {
+      setIsSettingsLoading(true);
+      try {
+        const settings = await configService.getUserSettings();
+        if (settings) {
+          setRegion(settings.region || "");
+          setVerticals(settings.verticals || "");
+          setWebhook(settings.webhook_url || "");
+          setColorScheme(settings.color_scheme || "");
+        }
+      } catch (error) {
+        console.error("Error loading user settings:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load your settings. Using default values.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsSettingsLoading(false);
+      }
+    };
+
+    loadUserSettings();
+  }, [toast]);
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
@@ -37,7 +66,7 @@ const Dashboard = () => {
   };
 
   // Function to get backend configuration from localStorage or API
-  const getBackendConfig = () => {
+  const getBackendConfig = async () => {
     // In a real app, this would fetch from an API or localStorage
     // For now, we'll use mock data
     return {
@@ -49,7 +78,7 @@ const Dashboard = () => {
 
   // Function to call OpenRouter API
   const generateLandingPage = async (userPrompt: string, systemPrompt: string) => {
-    const config = getBackendConfig();
+    const config = await getBackendConfig();
     
     try {
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -112,8 +141,18 @@ const Dashboard = () => {
     setIsLoading(true);
     
     try {
+      // Save user settings
+      const userSettings: Omit<UserSettings, 'id' | 'updated_at'> = {
+        region: region || "",
+        verticals: verticals || "",
+        color_scheme: colorScheme || "",
+        webhook_url: webhook || ""
+      };
+      
+      await configService.saveUserSettings(userSettings);
+      
       // Get backend configuration
-      const config = getBackendConfig();
+      const config = await getBackendConfig();
       
       // Create user prompt from form data
       const userPrompt = `Create a stunning single-page website/landing page for an automation agency with the following specifications:
@@ -169,6 +208,17 @@ const Dashboard = () => {
       setIsLoading(false);
     }
   };
+
+  if (isSettingsLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-gold mx-auto" />
+          <p className="text-white mt-4">Loading your settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-gray-100">
