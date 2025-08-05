@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,30 +13,29 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signIn } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate login process
-    setTimeout(() => {
+    try {
+      await signIn(email, password);
+      navigate("/dashboard");
+      toast({
+        title: "Login Successful",
+        description: "Welcome back to your dashboard!",
+      });
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast({
+        title: "Login Failed",
+        description: error.message || "Invalid credentials",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      // In a real app, this would validate against backend credentials
-      if (email && password) {
-        localStorage.setItem("isAuthenticated", "true");
-        navigate("/dashboard");
-        toast({
-          title: "Login Successful",
-          description: "Welcome back to your dashboard!",
-        });
-      } else {
-        toast({
-          title: "Login Failed",
-          description: "Please enter both email and password",
-          variant: "destructive",
-        });
-      }
-    }, 1000);
+    }
   };
 
   return (

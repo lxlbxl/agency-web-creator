@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,16 +17,21 @@ import {
   Globe,
   Info,
   User,
-  Lock
+  Lock,
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { configService, BackendConfig as BackendConfigType } from "@/services/configService";
+import { useAuth } from "@/contexts/AuthContext";
 
 const BackendConfig = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isConfigLoading, setIsConfigLoading] = useState(true);
   
-  // Form states - in a real app, these would be loaded from backend
+  // Form states
   const [apiKey, setApiKey] = useState("");
   const [model, setModel] = useState("openai/gpt-4");
   const [systemPrompt, setSystemPrompt] = useState(`You are an expert web designer specializing in creating stunning single-page websites for automation agencies. Create modern, responsive HTML/CSS/JS landing pages with the following specifications:
@@ -48,18 +53,77 @@ const BackendConfig = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
 
-  const handleSave = (e: React.FormEvent) => {
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!session && !isConfigLoading) {
+      navigate("/login");
+    }
+  }, [session, navigate, isConfigLoading]);
+
+  // Load backend configuration on component mount
+  useEffect(() => {
+    const loadBackendConfig = async () => {
+      if (!session) return;
+      
+      setIsConfigLoading(true);
+      try {
+        const config = await configService.getBackendConfig();
+        if (config) {
+          setApiKey(config.api_key || "");
+          setModel(config.model || "openai/gpt-4");
+          setSystemPrompt(config.system_prompt || "");
+          setDomainFormat(config.domain_format || "");
+          setEmailFormat(config.email_format || "");
+          setAdminEmail(config.admin_email || "");
+        }
+      } catch (error: any) {
+        console.error("Error loading backend config:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load your configuration. Using default values.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsConfigLoading(false);
+      }
+    };
+
+    if (session) {
+      loadBackendConfig();
+    }
+  }, [session, toast]);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate saving configuration
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Save backend configuration
+      const backendConfig: Omit<BackendConfigType, 'id' | 'updated_at'> = {
+        api_key: apiKey,
+        model: model,
+        system_prompt: systemPrompt,
+        domain_format: domainFormat,
+        email_format: emailFormat,
+        admin_email: adminEmail
+      };
+      
+      await configService.saveBackendConfig(backendConfig);
+      
       toast({
         title: "Configuration Saved",
         description: "Your backend settings have been updated successfully.",
       });
-    }, 1000);
+    } catch (error: any) {
+      console.error("Error saving configuration:", error);
+      toast({
+        title: "Save Failed",
+        description: "Failed to save configuration. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleTestConnection = async () => {
@@ -104,6 +168,17 @@ const BackendConfig = () => {
       setIsLoading(false);
     }
   };
+
+  if (isConfigLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-gold mx-auto" />
+          <p className="text-white mt-4">Loading your configuration...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-gray-100">
