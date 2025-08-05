@@ -3,19 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Settings, 
-  Shield,
-  Loader2
-} from "lucide-react";
+import { Settings, Shield, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { configService, BackendConfig as BackendConfigType } from "@/services/configService";
 import { useAuth } from "../contexts/AuthContext";
-import ApiConfigForm from "@/components/backend/ApiConfigForm";
-import AdminCredentialsForm from "@/components/backend/AdminCredentialsForm";
-import DomainEmailForm from "@/components/backend/DomainEmailForm";
-import SecurityGuidelines from "@/components/backend/SecurityGuidelines";
-import ConfigurationTips from "@/components/backend/ConfigurationTips";
+import ApiConfigForm from "../components/backend-config/ApiConfigForm";
+import AdminCredentialsForm from "../components/backend-config/AdminCredentialsForm";
+import DomainEmailForm from "../components/backend-config/DomainEmailForm";
+import SecurityGuidelines from "../components/backend-config/SecurityGuidelines";
+import ConfigurationTips from "../components/backend-config/ConfigurationTips";
 
 const BackendConfig = () => {
   const navigate = useNavigate();
