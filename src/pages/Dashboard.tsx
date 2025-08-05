@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { 
@@ -17,7 +16,8 @@ import {
   LogOut,
   Sparkles,
   Rocket,
-  Shield
+  Shield,
+  Cog
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -25,7 +25,7 @@ const Dashboard = () => {
   const [region, setRegion] = useState("");
   const [verticals, setVerticals] = useState("");
   const [webhook, setWebhook] = useState("");
-  const [colorScheme, setColorScheme] = useState("gold-black-green");
+  const [colorScheme, setColorScheme] = useState("");
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
@@ -57,6 +57,15 @@ const Dashboard = () => {
               <Sparkles className="w-3 h-3 mr-1" />
               AI Powered
             </Badge>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate("/backend-config")}
+              className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+            >
+              <Cog className="w-4 h-4 mr-2" />
+              Backend Config
+            </Button>
             <Button 
               variant="outline" 
               size="sm" 
@@ -95,33 +104,24 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="region" className="text-gray-200">Region</Label>
-                    <Select value={region} onValueChange={setRegion}>
-                      <SelectTrigger className="bg-gray-900 border-gray-700 text-white focus:ring-gold">
-                        <SelectValue placeholder="Select region" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="global">Global</SelectItem>
-                        <SelectItem value="north-america">North America</SelectItem>
-                        <SelectItem value="europe">Europe</SelectItem>
-                        <SelectItem value="asia">Asia</SelectItem>
-                        <SelectItem value="australia">Australia</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      id="region"
+                      placeholder="e.g., Global, North America, Europe"
+                      value={region}
+                      onChange={(e) => setRegion(e.target.value)}
+                      className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="colorScheme" className="text-gray-200">Color Scheme</Label>
-                    <Select value={colorScheme} onValueChange={setColorScheme}>
-                      <SelectTrigger className="bg-gray-900 border-gray-700 text-white focus:ring-gold">
-                        <SelectValue placeholder="Select color scheme" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gold-black-green">Gold, Black & Lemon Green</SelectItem>
-                        <SelectItem value="blue-white">Blue & White</SelectItem>
-                        <SelectItem value="purple-dark">Purple & Dark</SelectItem>
-                        <SelectItem value="red-black">Red & Black</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      id="colorScheme"
+                      placeholder="e.g., Gold, Black & Lemon Green"
+                      value={colorScheme}
+                      onChange={(e) => setColorScheme(e.target.value)}
+                      className="bg-gray-900 border-gray-700 text-white focus:ring-gold"
+                    />
                   </div>
                 </div>
                 
@@ -227,6 +227,12 @@ const Dashboard = () => {
                     Domain & Email Formats
                   </li>
                 </ul>
+                <Button 
+                  onClick={() => navigate("/backend-config")}
+                  className="w-full mt-4 bg-gradient-to-r from-gold to-green-500 hover:from-gold/90 hover:to-green-500/90 text-black font-bold transition-all duration-300"
+                >
+                  Configure Backend
+                </Button>
               </CardContent>
             </Card>
           </div>

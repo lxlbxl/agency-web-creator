@@ -38,11 +38,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black p-4">
-      <Card className="w-full max-w-md bg-black border-2 border-gold shadow-lg shadow-gold/20">
+    <div className="min-h-screen flex items-center justify-center bg-black p-4">
+      <Card className="w-full max-w-md bg-gray-900 border border-gray-800 shadow-2xl shadow-gold/10 hover:shadow-gold/20 transition-all duration-300">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-gold">Automation Agency</CardTitle>
-          <CardDescription className="text-gray-300">AI-Powered Landing Page Generator</CardDescription>
+          <CardTitle className="text-2xl font-bold text-white">Agency Login</CardTitle>
+          <CardDescription className="text-gray-400">Enter your credentials to access the dashboard</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -54,7 +54,7 @@ const Login = () => {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-gray-900 border-gray-700 text-white focus:ring-2 focus:ring-gold"
+                className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold"
                 required
               />
             </div>
@@ -66,7 +66,7 @@ const Login = () => {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-gray-900 border-gray-700 text-white focus:ring-2 focus:ring-gold"
+                className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold"
                 required
               />
             </div>
@@ -80,8 +80,8 @@ const Login = () => {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col">
-          <div className="text-sm text-gray-400 text-center">
-            Demo credentials: admin@example.com / password
+          <div className="text-sm text-gray-500 text-center">
+            Demo: admin@example.com / password
           </div>
         </CardFooter>
       </Card>
