@@ -14,7 +14,8 @@ import {
   Save, 
   RefreshCw,
   Shield,
-  Globe
+  Globe,
+  Info
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,10 +24,23 @@ const BackendConfig = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   
-  // Form states
+  // Form states - in a real app, these would be loaded from backend
   const [apiKey, setApiKey] = useState("");
-  const [model, setModel] = useState("");
-  const [systemPrompt, setSystemPrompt] = useState("");
+  const [model, setModel] = useState("openai/gpt-4");
+  const [systemPrompt, setSystemPrompt] = useState(`You are an expert web designer specializing in creating stunning single-page websites for automation agencies. Create modern, responsive HTML/CSS/JS landing pages with the following specifications:
+  
+1. Modern, responsive design that works on all devices
+2. Use a color scheme of Gold, Black & Lemon Green throughout
+3. Include sections for:
+   - Hero section with compelling headline and call-to-action
+   - Services offered
+   - About the agency
+   - Testimonials (if applicable)
+   - Contact form that submits to a webhook URL
+4. Optimize for conversions with clear CTAs
+5. Include appropriate animations and interactive elements
+6. Ensure fast loading and clean code
+7. Return only valid HTML/CSS/JS code without any additional explanations`);
   const [domainFormat, setDomainFormat] = useState("");
   const [emailFormat, setEmailFormat] = useState("");
 
@@ -142,7 +156,8 @@ const BackendConfig = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="systemPrompt" className="text-white">
+                  <Label htmlFor="systemPrompt" className="text-white flex items-center">
+                    <Info className="w-4 h-4 mr-2 text-gold" />
                     System Prompt
                   </Label>
                   <Textarea
@@ -153,7 +168,7 @@ const BackendConfig = () => {
                     className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold min-h-[200px]"
                   />
                   <p className="text-sm text-gray-400">
-                    This prompt will guide the AI when generating landing pages
+                    This prompt defines the AI's role and instructions. The dashboard inputs will be sent as user prompts.
                   </p>
                 </div>
                 

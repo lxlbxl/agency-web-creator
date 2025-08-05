@@ -17,11 +17,15 @@ import {
   Sparkles,
   Rocket,
   Shield,
-  Cog
+  Cog,
+  Loader2
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [region, setRegion] = useState("");
   const [verticals, setVerticals] = useState("");
   const [webhook, setWebhook] = useState("");
@@ -32,11 +36,138 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Function to get backend configuration from localStorage or API
+  const getBackendConfig = () => {
+    // In a real app, this would fetch from an API or localStorage
+    // For now, we'll use mock data
+    return {
+      apiKey: "sk-or-...", // This should come from secure storage
+      model: "openai/gpt-4", // Default model
+      systemPrompt: "You are an expert web designer specializing in creating stunning single-page websites for automation agencies. Create modern, responsive HTML/CSS/JS landing pages with the following specifications."
+    };
+  };
+
+  // Function to call OpenRouter API
+  const generateLandingPage = async (userPrompt: string, systemPrompt: string) => {
+    const config = getBackendConfig();
+    
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${config.apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: config.model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 4000
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error("Error generating landing page:", error);
+      throw error;
+    }
+  };
+
+  // Function to save generated website
+  const saveGeneratedWebsite = async (htmlContent: string) => {
+    // In a real app, this would save to a database or file system
+    // For now, we'll just log to console and create a blob
+    const timestamp = new Date().toISOString();
+    const filename = `landing-page-${timestamp.replace(/[:.]/g, '-')}.html`;
+    
+    // Log to backend (in a real app, this would be an API call)
+    console.log("Generated website URL:", `${window.location.origin}/${filename}`);
+    
+    // Create a downloadable file
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary link and trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    return `${window.location.origin}/${filename}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would call the OpenRouter API
-    console.log({ region, verticals, webhook, colorScheme });
-    alert("Landing page generation started! In a real implementation, this would call the OpenRouter API.");
+    setIsLoading(true);
+    
+    try {
+      // Get backend configuration
+      const config = getBackendConfig();
+      
+      // Create user prompt from form data
+      const userPrompt = `Create a stunning single-page website/landing page for an automation agency with the following specifications:
+      
+      Region: ${region || 'Not specified'}
+      Business Verticals: ${verticals || 'Not specified'}
+      Color Scheme: ${colorScheme || 'Gold, Black & Lemon Green (default)'}
+      Webhook URL for form submissions: ${webhook || 'Not specified'}
+      
+      Requirements:
+      1. Modern, responsive design that works on all devices
+      2. Use the specified color scheme (Gold, Black & Lemon Green) throughout
+      3. Include sections for:
+         - Hero section with compelling headline and call-to-action
+         - Services offered
+         - About the agency
+         - Testimonials (if applicable)
+         - Contact form that submits to the provided webhook URL
+      4. Optimize for conversions with clear CTAs
+      5. Include appropriate animations and interactive elements
+      6. Ensure fast loading and clean code
+      7. Return only valid HTML/CSS/JS code without any additional explanations
+      
+      Please generate the complete HTML code for this landing page.`;
+      
+      // Generate landing page using LLM
+      toast({
+        title: "Generating Landing Page",
+        description: "Creating your custom landing page with AI...",
+      });
+      
+      const generatedCode = await generateLandingPage(userPrompt, config.systemPrompt);
+      
+      // Save the generated website
+      const websiteUrl = await saveGeneratedWebsite(generatedCode);
+      
+      toast({
+        title: "Landing Page Generated!",
+        description: `Your landing page has been created successfully. URL: ${websiteUrl}`,
+      });
+      
+      // Log to backend (in a real implementation, this would be an API call)
+      console.log("Landing page generated and saved at:", websiteUrl);
+      
+    } catch (error) {
+      console.error("Error generating landing page:", error);
+      toast({
+        title: "Generation Failed",
+        description: "Failed to generate landing page. Please check your configuration and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -149,10 +280,20 @@ const Dashboard = () => {
                 
                 <Button 
                   type="submit" 
+                  disabled={isLoading}
                   className="w-full bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
                 >
-                  <Rocket className="mr-2" />
-                  Generate Landing Page
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Rocket className="mr-2" />
+                      Generate Landing Page
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>
