@@ -15,7 +15,9 @@ import {
   RefreshCw,
   Shield,
   Globe,
-  Info
+  Info,
+  User,
+  Lock
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -43,6 +45,8 @@ const BackendConfig = () => {
 7. Return only valid HTML/CSS/JS code without any additional explanations`);
   const [domainFormat, setDomainFormat] = useState("");
   const [emailFormat, setEmailFormat] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,7 +223,57 @@ const BackendConfig = () => {
             <Card className="bg-gray-900/80 border border-gray-800 hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
               <CardHeader>
                 <CardTitle className="flex items-center text-white">
-                  <Globe className="mr-2 text-green-400" />
+                  <User className="mr-2 text-green-400" />
+                  Admin Credentials
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="adminEmail" className="text-white">
+                    Admin Email
+                  </Label>
+                  <Input
+                    id="adminEmail"
+                    type="email"
+                    placeholder="admin@example.com"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="adminPassword" className="text-white">
+                    Admin Password
+                  </Label>
+                  <Input
+                    id="adminPassword"
+                    type="password"
+                    placeholder="Enter new password"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
+                  />
+                </div>
+                
+                <Button 
+                  onClick={() => {
+                    toast({
+                      title: "Credentials Updated",
+                      description: "Admin credentials have been updated successfully.",
+                    });
+                  }}
+                  className="w-full bg-green-400 text-black hover:bg-green-400/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-400/50"
+                >
+                  Update Credentials
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gray-900/80 border border-gray-800 hover:border-gold transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-white">
+                  <Globe className="mr-2 text-gold" />
                   Domain & Email Formats
                 </CardTitle>
               </CardHeader>
@@ -233,7 +287,7 @@ const BackendConfig = () => {
                     placeholder="e.g., {business}-{region}.com"
                     value={domainFormat}
                     onChange={(e) => setDomainFormat(e.target.value)}
-                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                   />
                   <p className="text-sm text-gray-400">
                     Format for generated domains
@@ -249,7 +303,7 @@ const BackendConfig = () => {
                     placeholder="e.g., contact@{domain}"
                     value={emailFormat}
                     onChange={(e) => setEmailFormat(e.target.value)}
-                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-green-400 focus:border-green-400"
+                    className="bg-gray-800 border-gray-700 text-white focus:ring-2 focus:ring-gold focus:border-gold"
                   />
                   <p className="text-sm text-gray-400">
                     Format for contact emails
@@ -263,7 +317,7 @@ const BackendConfig = () => {
                       description: "Domain and email formats updated successfully.",
                     });
                   }}
-                  className="w-full bg-green-400 text-black hover:bg-green-400/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-400/50"
+                  className="w-full bg-gold text-black hover:bg-gold/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gold/50"
                 >
                   Save Formats
                 </Button>

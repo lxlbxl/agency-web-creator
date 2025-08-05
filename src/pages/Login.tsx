@@ -20,7 +20,8 @@ const Login = () => {
     // Simulate login process
     setTimeout(() => {
       setIsLoading(false);
-      if (email === "admin@example.com" && password === "password") {
+      // In a real app, this would validate against backend credentials
+      if (email && password) {
         localStorage.setItem("isAuthenticated", "true");
         navigate("/dashboard");
         toast({
@@ -30,7 +31,7 @@ const Login = () => {
       } else {
         toast({
           title: "Login Failed",
-          description: "Invalid email or password",
+          description: "Please enter both email and password",
           variant: "destructive",
         });
       }
@@ -81,7 +82,7 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex flex-col">
           <div className="text-sm text-gray-500 text-center">
-            Demo: admin@example.com / password
+            Contact your administrator for login credentials
           </div>
         </CardFooter>
       </Card>
