@@ -7,13 +7,11 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import BackendConfig from "./pages/BackendConfig";
-
-const isAuthenticated = () => {
-  return localStorage.getItem("isAuthenticated") === "true";
-};
+import { useAuth } from "./contexts/AuthContext";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  return isAuthenticated() ? children : <Navigate to="/login" />;
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 const App = () => (
@@ -47,7 +45,6 @@ const App = () => (
             </ProtectedRoute>
           } 
         />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

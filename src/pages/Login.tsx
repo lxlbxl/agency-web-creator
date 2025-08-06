@@ -1,41 +1,37 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const { login } = useAuth();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simple authentication - in a real app, this would validate against a backend
-    setTimeout(() => {
+    try {
+      await login(email, password);
+      toast({
+        title: "Login Successful",
+        description: "Welcome back to your dashboard!",
+      });
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: "Please enter both email and password",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      // For demo purposes, any non-empty email and password works
-      if (email && password) {
-        localStorage.setItem("isAuthenticated", "true");
-        navigate("/dashboard");
-        toast({
-          title: "Login Successful",
-          description: "Welcome back to your dashboard!",
-        });
-      } else {
-        toast({
-          title: "Login Failed",
-          description: "Please enter both email and password",
-          variant: "destructive",
-        });
-      }
-    }, 1000);
+    }
   };
 
   return (
