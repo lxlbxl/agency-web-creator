@@ -1,8 +1,16 @@
 import { toast } from '@/hooks/use-toast';
 
-export const saveConfig = async (config: any) => {
+type AppConfig = {
+  apiKey?: string;
+  model?: string;
+  systemPrompt?: string;
+  domainFormat?: string;
+  emailFormat?: string;
+  adminEmail?: string;
+};
+
+export const saveConfig = async (config: AppConfig): Promise<boolean> => {
   try {
-    // Simulate saving to localStorage
     localStorage.setItem('appConfig', JSON.stringify(config));
     toast({
       title: 'Success',
@@ -19,7 +27,11 @@ export const saveConfig = async (config: any) => {
   }
 };
 
-export const getConfig = () => {
-  const config = localStorage.getItem('appConfig');
-  return config ? JSON.parse(config) : null;
+export const getConfig = (): AppConfig | null => {
+  try {
+    const config = localStorage.getItem('appConfig');
+    return config ? JSON.parse(config) : null;
+  } catch {
+    return null;
+  }
 };
